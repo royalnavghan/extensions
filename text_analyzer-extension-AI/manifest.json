@@ -1,0 +1,52 @@
+{
+  "manifest_version": 3,
+  "name": "Text Analyzer Extension",
+  "version": "1.0.0",
+  "description": "A Chrome extension for analyzing text with AI assistance",
+  "author": "Santhosh Kumar Reddy",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "tabs",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://api.ocr.space/*",
+    "https://api.openai.com/*",
+    "https://generativelanguage.googleapis.com/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+T"
+      },
+      "description": "Open Text Analyzer"
+    },
+    "capture_screen": {
+      "suggested_key": {
+        "default": "Alt+Shift+C"
+      },
+      "description": "Capture screen text"
+    },
+    "toggle_split_view": {
+      "suggested_key": {
+        "default": "Alt+Shift+S"
+      },
+      "description": "Toggle split view"
+    }
+  },
+  "icons": {
+    "48": "icon.png"
+  }
+} 

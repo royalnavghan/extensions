@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Santhosh Kumar Reddy">
+  <title>Udemy Business Course Marker</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-theme="dark" class="overflow-auto">
+  <div class="container">
+    <div class="header">
+      <div class="logo-container">
+        <img src="images/icon.png" alt="Logo" class="logo">
+        <div class="header-text">
+          <h1>Udemy Business</h1>
+          <h2>Course Marker Pro</h2>
+        </div>
+      </div>
+      <div class="theme-toggle">
+        <span class="material-icons" id="themeToggle">light_mode</span>
+      </div>
+    </div>
+    
+    <div class="tabs">
+      <div class="tab active" data-tab="main">Main</div>
+      <div class="tab" data-tab="settings">Settings</div>
+      <div class="tab" data-tab="history">History</div>
+    </div>
+    
+    <div class="tab-content active" id="main-tab">
+      <div class="card">
+        <div class="card-header">
+          <span class="material-icons icon-primary">tab</span>
+          <h3>Udemy Tab</h3>
+        </div>
+        <div class="card-content">
+          <div class="current-course" id="currentCourseDisplay">
+            <div class="empty-course">Select a course</div>
+          </div>
+          <div class="tab-selector-container">
+            <select id="tabSelector" class="dropdown" title="Select Udemy course">
+              <option value="">Loading tabs...</option>
+            </select>
+            <button id="refreshTabsBtn" class="icon-btn" title="Refresh tabs">
+              <span class="material-icons">refresh</span>
+            </button>
+          </div>
+          <button id="openUdemyBtn" class="btn secondary">
+            <span class="material-icons">open_in_new</span>
+            Open Udemy
+          </button>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <span class="material-icons icon-primary">smart_button</span>
+          <h3>Actions</h3>
+        </div>
+        <div class="card-content">
+          <button id="markAllBtn" class="btn primary">
+            <span class="material-icons">done_all</span>
+            Mark All as Watched
+          </button>
+          <div class="action-group">
+            <button id="expandBtn" class="btn secondary">
+              <span class="material-icons">unfold_more</span>
+              Expand All
+            </button>
+            <button id="uncheckBtn" class="btn secondary">
+              <span class="material-icons">remove_done</span>
+              Uncheck All
+            </button>
+          </div>
+          <button id="stopTasksBtn" class="btn danger">
+            <span class="material-icons">stop</span>
+            Stop Tasks
+          </button>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <span class="material-icons icon-primary">analytics</span>
+          <h3>Progress</h3>
+        </div>
+        <div class="card-content">
+          <div class="progress-card">
+            <div class="progress-container">
+              <div class="progress-bar" id="progressBar">
+                <div class="progress-text">0%</div>
+              </div>
+            </div>
+            <div id="status" class="status">Ready to process</div>
+          </div>
+          
+          <div class="stats-container" id="statsContainer">
+            <div class="stat-item">
+              <div class="stat-icon">
+                <span class="material-icons">expand_more</span>
+              </div>
+              <div class="stat-content">
+                <span id="expandedSections" class="stat-value">0</span>
+                <span class="stat-label">sections expanded</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon">
+                <span class="material-icons">remove_done</span>
+              </div>
+              <div class="stat-content">
+                <span id="uncheckedVideos" class="stat-value">0</span>
+                <span class="stat-label">videos unchecked</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-icon">
+                <span class="material-icons">done_all</span>
+              </div>
+              <div class="stat-content">
+                <span id="checkedVideos" class="stat-value">0</span>
+                <span class="stat-label">videos marked</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <span class="material-icons icon-primary">help_outline</span>
+          <h3>Quick Help</h3>
+        </div>
+        <div class="card-content">
+          <div class="help-tips">
+            <div class="tip">
+              <span class="material-icons icon-warning">lightbulb</span>
+              <p>For large courses, increase the processing delay in settings</p>
+            </div>
+            <div class="tip">
+              <span class="material-icons icon-warning">lightbulb</span>
+              <p>Some corporate accounts may restrict marking - contact your admin if issues occur</p>
+            </div>
+            <a href="#" id="helpToggle" class="help-toggle">More tips</a>
+            <div id="helpDetails" class="help-details" style="display:none;">
+              <div class="tip">
+                <span class="material-icons icon-warning">lightbulb</span>
+                <p>If videos aren't marking correctly, try the "Uncheck All Videos" option first</p>
+              </div>
+              <div class="tip">
+                <span class="material-icons icon-warning">lightbulb</span>
+                <p>The extension works best when you're on a course content page</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="settings-tab">
+      <div class="card">
+        <div class="card-header">
+          <span class="material-icons icon-primary">settings</span>
+          <h3>Settings</h3>
+        </div>
+        <div class="card-content">
+          <div class="setting-item">
+            <label class="switch">
+              <input type="checkbox" id="autoExpandSetting" checked>
+              <span class="slider"></span>
+            </label>
+            <span class="setting-label">Auto-expand sections</span>
+          </div>
+          
+          <div class="setting-item">
+            <label class="switch">
+              <input type="checkbox" id="autoUncheckSetting" checked>
+              <span class="slider"></span>
+            </label>
+            <span class="setting-label">Auto-uncheck watched videos</span>
+          </div>
+          
+          <div class="setting-item">
+            <label class="switch">
+              <input type="checkbox" id="skipCompletedSetting">
+              <span class="slider"></span>
+            </label>
+            <span class="setting-label">Skip completed sections</span>
+          </div>
+          
+          <div class="setting-item">
+            <label for="delaySlider" class="setting-label">Processing delay (ms)</label>
+            <div class="slider-container">
+              <input type="range" id="delaySlider" min="500" max="3000" value="1000" step="100" class="range-slider">
+              <span id="delayValue">1000ms</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-content" id="history-tab">
+      <div class="card">
+        <div class="card-header">
+          <span class="material-icons icon-primary">history</span>
+          <h3>Recent Activity</h3>
+        </div>
+        <div class="card-content">
+          <div id="activityLog" class="activity-log">
+            <div class="empty-state">
+              <span class="material-icons">history</span>
+              <p>No recent activity</p>
+            </div>
+          </div>
+          <button id="clearHistoryBtn" class="btn secondary">
+            <span class="material-icons">delete</span>
+            Clear History
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <p>Udemy Business Course Marker | <span id="version">v1.0</span> | By Santhosh</p>
+    </div>
+  </div>
+  
+
+  <div class="summary-overlay" id="completionSummary">
+    <div class="summary-modal">
+      <div class="summary-header">
+        <h3>Completion Summary</h3>
+        <span class="close-modal material-icons">close</span>
+      </div>
+      <div class="summary-content">
+        <div class="summary-course-title" id="summaryTitle">Course Title</div>
+        
+        <div class="summary-stats">
+          <div class="summary-stat-item">
+            <span class="material-icons">play_circle_filled</span>
+            <div>
+              <div class="summary-stat-value" id="summaryVideosCount">0</div>
+              <div class="summary-stat-label">Videos Completed</div>
+            </div>
+          </div>
+          <div class="summary-stat-item">
+            <span class="material-icons">schedule</span>
+            <div>
+              <div class="summary-stat-value" id="summaryTimeValue">00:00</div>
+              <div class="summary-stat-label">Hours Saved</div>
+            </div>
+          </div>
+          <div class="summary-stat-item">
+            <span class="material-icons">emoji_events</span>
+            <div>
+              <div class="summary-stat-value">100%</div>
+              <div class="summary-stat-label">Completion Rate</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="summary-message">
+          <p>You've successfully watched all videos in this course!</p>
+          <p class="highlight">Now go and study. 🚶🚶</p>
+        </div>
+      </div>
+      <div class="summary-footer">
+        <button class="btn primary close-modal-btn">
+          <span class="material-icons">check_circle</span>
+          Got it!
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html> 
