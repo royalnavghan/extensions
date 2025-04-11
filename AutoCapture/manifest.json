@@ -1,0 +1,85 @@
+{
+  "manifest_version": 3,
+  "name": "Text Analyzer Extension",
+  "version": "1.0.0",
+  "description": "A Chrome extension for analyzing text with AI assistance",
+  "author": "Santhosh Kumar Reddy",
+  "action": {
+    "default_popup": "js/popup/popup.html",
+    "default_icon": "assets/icons/icon.png"
+  },
+  "background": {
+    "service_worker": "js/background/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["js/content/content-script.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "tabs",
+    "downloads",
+    "sidePanel",
+    "windows"
+  ],
+  "host_permissions": [
+    "https://api.openai.com/*",
+    "https://generativelanguage.googleapis.com/*",
+    "https://api.telegram.org/*",
+    "<all_urls>"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "side_panel": {
+    "default_path": "js/side_panel/side_panel.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "js/fullscreen/fullscreen.html",
+        "js/side_panel/side_panel.html",
+        "js/popup/popup.html"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+T",
+        "mac": "Alt+Shift+T",
+        "windows": "Ctrl+Shift+F",
+        "linux": "Ctrl+Shift+F"
+      },
+      "description": "Open Text Analyzer"
+    },
+    "capture_screen": {
+      "suggested_key": {
+        "default": "Alt+Shift+C"
+      },
+      "description": "Capture screen text"
+    },
+    "toggle_split_view": {
+      "suggested_key": {
+        "default": "Alt+Shift+S"
+      },
+      "description": "Toggle split view"
+    },
+    "toggle_display_mode": {
+      "suggested_key": {
+        "default": "Alt+Shift+F"
+      },
+      "description": "Toggle between side panel and full screen mode"
+    }
+  },
+  "icons": {
+    "48": "assets/icons/icon.png",
+    "128": "assets/icons/icon.png"
+  }
+} 

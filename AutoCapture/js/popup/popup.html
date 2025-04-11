@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Analyzer Extension</title>
+  <meta name="author" content="Santhosh Kumar Reddy">
+  <link rel="stylesheet" href="../../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../css/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../icons/fontawesome/icons.css">
+  <script src="../../js/marked.min.js"></script>
+  <style>
+    .new-feature-notice {
+      background: rgba(25, 135, 84, 0.15);
+      border-radius: 8px;
+      padding: 10px 15px;
+      margin-bottom: 15px;
+      border-left: 4px solid #198754;
+    }
+    
+    .new-feature-notice h3 {
+      color: #198754;
+      margin-top: 0;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .new-feature-notice p {
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+    
+    .new-feature-notice .shortcut {
+      background: rgba(52, 58, 64, 0.2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    
+    .dark-theme .new-feature-notice {
+      background: rgba(25, 135, 84, 0.2);
+    }
+
+    .footer {
+      text-align: center;
+      padding: 10px;
+      color: #666;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+    .love-symbol {
+      color: #ff4b4b;
+      animation: heartbeat 1.5s ease-in-out infinite;
+    }
+    @keyframes heartbeat {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="new-feature-notice">
+      <h3>
+        <span class="fa-icon fa-icon-star" style="margin-right: 8px;"></span>
+        New Features Available!
+      </h3>
+      <p>This extension now supports side panel and fullscreen modes!</p>
+      <p>Press <span class="shortcut">Alt+Shift+F</span> to toggle between side panel and fullscreen mode.</p>
+      <p>Or access the side panel through Chrome's side panel menu 
+        <span class="fa-icon fa-icon-columns"></span> in the top-right corner.</p>
+    </div>
+    
+    <div class="header">
+      <h1>Text Analyzer</h1>
+      <div class="header-controls">
+        <button id="openSidePanel" class="modern-icon-button" title="Open in Side Panel">
+          <span class="fa-icon fa-icon-columns"></span>
+        </button>
+        <button id="openFullscreen" class="modern-icon-button" title="Open in Full Screen">
+          <span class="fa-icon fa-icon-expand"></span>
+        </button>
+        <button id="splitViewToggle" class="modern-icon-button" title="Toggle Split View">
+          <span class="fa-icon fa-icon-columns"></span>
+        </button>
+        <button id="historyBtn" class="modern-icon-button" title="History">
+          <span class="fa-icon fa-icon-history"></span>
+        </button>
+        <button id="themeToggle" class="modern-icon-button theme-toggle-btn" title="Toggle Theme">
+          <span class="fa-icon fa-icon-moon theme-icon-dark"></span>
+          <span class="fa-icon fa-icon-sun theme-icon-light"></span>
+        </button>
+        <button id="settingsBtn" class="modern-icon-button" title="Settings">
+          <span class="fa-icon fa-icon-cog"></span>
+        </button>
+      </div>
+    </div>
+    
+    <div id="mainView">
+      <div class="button-group">
+        <button id="captureText" class="btn-primary capture-btn">
+          <span class="fa-icon fa-icon-camera" style="margin-right: 8px;"></span>
+          <span>Capture Screen Text</span>
+        </button>
+        <div class="model-selector">
+          <select id="aiModel" class="form-select">
+            <option value="chatgpt">ChatGPT</option>
+            <option value="gemini">Gemini 2.0 Flash</option>
+            <option value="gemini_thinking">Gemini 2.0 Flash Thinking</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="progress-container">
+        <div class="progress-step" id="stepOCR">
+          <div class="step-icon">
+            <span class="fa-icon fa-icon-camera"></span>
+          </div>
+          <div class="step-label">OCR Extraction</div>
+          <div class="step-status waiting">Waiting</div>
+        </div>
+        <div class="progress-arrow">
+          <span class="fa-icon fa-icon-arrow-right"></span>
+        </div>
+        <div class="progress-step" id="stepAI">
+          <div class="step-icon">
+            <span class="fa-icon fa-icon-spinner"></span>
+          </div>
+          <div class="step-label">AI Analysis</div>
+          <div class="step-status waiting">Waiting</div>
+        </div>
+      </div>
+      
+      <div id="contentArea" class="content-area standard-view">
+        <div class="content-section" id="extractedTextSection">
+          <div class="section-header">
+            <h2>Extracted Text</h2>
+            <div class="section-controls">
+              <div class="mode-toggle">
+                <label class="switch">
+                  <input type="checkbox" id="textModeToggle" checked>
+                  <span class="slider round"></span>
+                </label>
+                <span class="toggle-label">Sanitized</span>
+              </div>
+              <button id="copyText" class="modern-icon-button small-button" title="Copy to clipboard">
+                <span class="fa-icon fa-icon-copy"></span>
+              </button>
+              <button id="clearText" class="modern-icon-button small-button" title="Clear text">
+                <span class="fa-icon fa-icon-trash"></span>
+              </button>
+            </div>
+          </div>
+          <div id="capturedText" class="text-box">
+            <p class="placeholder">Captured text will appear here</p>
+          </div>
+        </div>
+        
+        <div class="content-section" id="aiResponseSection">
+          <div class="section-header">
+            <h2>AI Response</h2>
+            <div class="section-controls">
+              <button id="copyResponse" class="modern-icon-button small-button" title="Copy to clipboard">
+                <span class="fa-icon fa-icon-copy"></span>
+              </button>
+              <button id="clearResponse" class="modern-icon-button small-button" title="Clear response">
+                <span class="fa-icon fa-icon-trash"></span>
+              </button>
+            </div>
+          </div>
+          <div id="aiResponse" class="text-box">
+            <p class="placeholder">AI response will appear here</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="status-bar">
+        <span id="statusMessage">Ready</span>
+        <div class="loader" id="loader">
+          <span class="fa-icon fa-icon-spinner spin-icon"></span>
+        </div>
+        <div id="keyboardShortcutsInfo">
+          <span class="shortcut-hint">Press <kbd>Alt+Shift+T</kbd> to capture</span>
+        </div>
+      </div>
+    </div>
+    
+    <div id="historyView" class="hidden">
+      <div class="history-header">
+        <h2 class="section-title">
+          <span class="fa-icon fa-icon-history" style="margin-right: 8px;"></span>
+          History
+        </h2>
+        <div class="history-actions">
+          <button id="exportHistory" class="action-button">
+            <span class="fa-icon fa-icon-download" style="margin-right: 6px;"></span>
+            Export
+          </button>
+          <button id="clearHistory" class="action-button danger-button">
+            <span class="fa-icon fa-icon-trash" style="margin-right: 6px;"></span>
+            Clear All
+          </button>
+          <button id="backToMain" class="action-button secondary-action">
+            <span class="fa-icon fa-icon-arrow-left" style="margin-right: 6px;"></span>
+            Back
+          </button>
+        </div>
+      </div>
+      
+      <div id="historyEntries" class="history-entries">
+        <div class="empty-history-message">
+          <span class="fa-icon fa-icon-history empty-icon" style="width: 48px; height: 48px;"></span>
+          <p>No history entries yet. Capture some text to get started!</p>
+        </div>
+      </div>
+      
+      <div class="pagination-container">
+        <button id="prevPage" class="pagination-button" disabled>
+          <span class="fa-icon fa-icon-arrow-left"></span>
+          Previous
+        </button>
+        <span id="pageIndicator">Page 1 of 1</span>
+        <button id="nextPage" class="pagination-button" disabled>
+          Next
+          <span class="fa-icon fa-icon-arrow-right"></span>
+        </button>
+      </div>
+    </div>
+    
+    <div id="settingsView" class="hidden">
+      <h2 class="settings-title">
+        <span class="fa-icon fa-icon-cog" style="margin-right: 8px;"></span>
+        API Settings
+      </h2>
+      
+      <div class="settings-security">
+        <label class="checkbox-container">
+          <input type="checkbox" id="doNotStoreKeys">
+          <span class="checkbox-text">Do not store API keys (you'll need to enter them each time)</span>
+        </label>
+        <div class="security-note">
+          <svg width="16" height="16" fill="#22c55e" viewBox="0 0 16 16" style="margin-right: 8px;">
+            <path fill-rule="evenodd" d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.777 11.777 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7.159 7.159 0 0 0 1.048-.625 11.775 11.775 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.541 1.541 0 0 0-1.044-1.263 62.467 62.467 0 0 0-2.887-.87C9.843.266 8.69 0 8 0zm2.146 5.146a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647z"/>
+          </svg>
+          <span>When enabled, keys are used only for the current session and not saved.</span>
+        </div>
+      </div>
+      
+      <div class="settings-group">
+        <label for="chatgptApiKey">ChatGPT API Key</label>
+        <div class="api-key-input">
+          <input type="password" id="chatgptApiKey" placeholder="Enter OpenAI API Key">
+          <button class="toggle-password modern-icon-button" title="Show/Hide">
+            <span class="fa-icon fa-icon-eye eye-icon"></span>
+          </button>
+        </div>
+        <p class="helper-text">Get your key at <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI</a></p>
+      </div>
+      
+      <div class="settings-group">
+        <label for="geminiApiKey">Gemini API Key</label>
+        <div class="api-key-input">
+          <input type="password" id="geminiApiKey" placeholder="Enter Gemini API Key">
+          <button class="toggle-password modern-icon-button" title="Show/Hide">
+            <span class="fa-icon fa-icon-eye eye-icon"></span>
+          </button>
+        </div>
+        <p class="helper-text">Get your key at <a href="https://ai.google.dev/" target="_blank">Google AI</a></p>
+      </div>
+      
+      <div class="settings-actions">
+        <button id="saveSettings" class="btn-primary">Save Settings</button>
+        <button id="cancelSettings" class="secondary-button">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="popup.js"></script>
+  <div class="footer">
+    Made with <span class="love-symbol">❤</span> by Santhosh
+  </div>
+</body>
+</html>
