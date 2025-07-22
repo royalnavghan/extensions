@@ -3,6 +3,22 @@
  * Author: Santhosh Kumar Reddy
  */
 
+// Add handler for extension icon click to open side panel
+chrome.action.onClicked.addListener((tab) => {
+  // Open the side panel when the extension icon is clicked
+  chrome.sidePanel.open({ windowId: tab.windowId })
+    .catch(error => {
+      console.error('Error opening side panel:', error);
+    });
+});
+
+// Add handler for setting up side panel behavior
+chrome.runtime.onInstalled.addListener(() => {
+  // Set side panel behavior to open on every page
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
+    .catch((error) => console.error('Error setting panel behavior:', error));
+});
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
   if (tab.url && (

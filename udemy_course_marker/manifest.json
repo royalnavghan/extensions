@@ -4,7 +4,7 @@
   "version": "1.0",
   "description": "Premium tool to mark all videos in Udemy Business courses as watched with advanced features",
   "author": "Santhosh Kumar Reddy",
-  "permissions": ["activeTab", "scripting", "storage", "tabs"],
+  "permissions": ["activeTab", "scripting", "storage", "tabs", "sidePanel"],
   "host_permissions": [
     "https://*.udemy.com/*",
     "https://*.udemy.com/organization/*/home/*"
@@ -13,12 +13,15 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_popup": "popup.html",
     "default_icon": {
       "16": "images/icon.png",
       "48": "images/icon.png",
       "128": "images/icon.png"
-    }
+    },
+    "default_title": "Open Udemy Course Marker"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
   },
   "icons": {
     "16": "images/icon.png",
